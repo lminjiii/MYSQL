@@ -1,0 +1,63 @@
+1. 
+select name, phone from professor
+where p_id >= 3
+order by name desc;
+
+2.
+select s_id, name, belong from student
+where belong in ('COMPUTER');
+
+3.
+select s_id, name, phone from student
+where belong in ('dance', 'music', 'sports')
+
+4.
+select s_id, name from student
+where s_id like '%010%';
+
+5.
+select * from student where name like '___';
+
+6.
+select * from student where s_id not like '%2009%';
+
+7.
+select s_id as id, name as 이름, belong as 소속, phone as 전화번호, status as 교수_ID from student
+where belong in ('music', 'computer', 'english') and s_id like '%2011%'
+order by status desc;
+
+8.
+delete from student where name = '전진';
+
+9.
+insert into student (s_id, name, belong, phone, status)
+values ('20090302', '전진', 'COMPUTER', '01012321313', '3');
+
+10.
+delete from student where phone like '%131%';
+
+11. 
+update student set name = '장원영'
+where s_id = '20080104';
+
+12.
+update student set belong = 'DANCE', phone = '010-7777-7777'
+where name = '부우';
+
+13.
+alter table professor rename to teacher;
+
+14.
+select belong, count(*) from student
+group by belong;
+
+15.
+select belong as 소속, sum(status) as 합계,
+avg(status) as 평균
+from student
+where belong in ('dance', 'music', 'sports')
+group by belong
+having 합계 > 2
+order by 합계 desc;
+
+

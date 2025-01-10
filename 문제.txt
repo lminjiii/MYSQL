@@ -1,0 +1,274 @@
+DEPT TABLE
+
+dept 테이블을 생성(
+- dept_id : 기본키, 자동증가
+- dept_name : 문자- 널 허용 안함
+- dept_loc : 문재 - 널 허용 안함
+
+data 입력
+1. 기획부 서울
+12. 영업1부 서울
+3. 영업2부 부산
+4. 영업3부 대구
+5. 관리부 서울
+
+출력
+전체 영업부 자료를 ID, NAME, LOCATION을 필드명으로 출력
+
+영업3부 삭제
+
+관리부의 지역을 제주도로 변경
+
+create table dept(
+dept_id int primary key auto_increment,
+dept_name varchar(20) not null,
+dept_loc varchar(10) not null
+);desc
+
+insert into dept(dept_name, dept_loc)
+values
+('기획부', '서울'),
+('영업 1부', '서울'),
+('영업 2부', '부산'),
+('영업 3부', '대구'),
+('관리부', '서울');
+
+select dept_id as NAME, dept_name as NAME, dept_loc as LOCATION
+from dept
+where dept_name like '영업%';
+
+delete from dept where dept_name = '영업 3부';
+
+update dept set dept_loc = '제주도'
+where dept_name = '관리부';
+
+select * from dept;
+
+
+create database idolgroup(
+dept_id int primary key auto_increment,
+dept_name varchar(20) not null,
+dept_loc varchar(10) not null
+);desc
+
+
+
+
+
+IDOLGROUP TABLE
+
+select g.name, g.debut, s.title, s.lyrics, s._id as songID
+from girl_group as g
+inner join song as s
+on g.hit_song_id = s._id
+(where g.name = '원더걸스')
+
+select g.name, e.name, g.debut, s.title
+from entertainment e
+inner join girl_group g
+on e.e_id = g.enter_id
+inner join song s
+on s.s_id = g.hit_song_id
+where e.name in ('sm', 'jyp')
+
+sm소속의 그룹 이름, 히트곡 제목, 노래가사를 출력
+그룹에 대해 내림 차순
+
+select e.name, g.name, s.title, s.lyrics from entertainment e
+inner join girl_group g
+on e.e_id = g.enter_id
+inner join song s
+on g.hit_song_id = s.s_id
+where e.name = 'sm'
+order by g.name desc;
+
+select * from song as s
+inner join girl_group as g
+on s.s_id = g.hit_song_id
+inner join entertainment as e
+on g.enter_id = e.e_id;
+
+가사에 me를 포함하는 자료의
+소속사, 그룹이름, 노래제목, 가사를
+출력합니다.
+select e.name, g.name, s.title from entertainment e
+join girl_group g
+on e.e_id = g.enter_id
+join song s
+on g.hit_song_id = s.s_id;
+
+소속사별 속해있는 그룹의 수를 출력
+select e.name, count(*) as 그룹수
+from entertainment e
+join girl_group g
+on e.e_id = g.enter_id
+group by e.name
+
+inner join : join하는 케이블에 공통적으로 함께 있는 자료들을 추출
+
+select g.g_id, name, title from girl_group g
+right join song s
+on g.hit_song_id = s.s_id
+
+노래 제목이 '미스터'인 그룹의 소속사를 4로 변경하는 작업
+
+1. song 테이블에서 title이 '미스터'인 s_id를 찾는다.
+
+select s_id from song where title = '미스터'
+---> 103
+
+2. girl_group 테이블에서 s_id 와 같은 hit_song_id를 찾아 enter_id를 수정한다
+
+update girl_group set enter_id = 4
+where hit_song_id = (select s_id from song where title = '미스터')
+
+노래 가사에 Give를 포함하는 자료를 girl_group에서 찾아서 출력
+
+1.song 테이블에서 lyrice에 'Give' 포함하는 자료
+
+select s_id from song where lyrics like '%Give%';
+
+select * from girl_group
+where hit_song_id = (select s_id from song where lyrics like '%Give%');
+
+노래 가사에 e를 포함하는 자료를 girl_group 에서 찾아서 출력
+
+select s_id from song where lyrics like '%e%';
+
+select * from girl_group
+where hit_song_id in (select s_id from song where lyrics like '%e%');
+
+노래 가사에 Give를 포함하는 자료를 girl_group에서 찾아서 삭제
+
+delete from girl_group
+where hit_song_id = (select s_id from song where lyrics like '%Give%');
+
+걸그룹 이름이 3자인 그룹 출력
+
+select name from girl_group
+where char_length(name) = 3;
+
+그룹이 데뷔한 해가...
+
+ 데뷔년도     그룹수
+===============
+   2007           1
+   2008           1
+   2009           5
+
+select year(debut) as 데뷔년도, count(*) as 그룹수
+from girl_group
+group by 데뷔년도
+order by 데뷔년도;
+
+select name, ifnull( hit_song_id, '힛트곡 없음') from girl_group;
+
+
+
+
+
+
+
+
+
+
+
+EMPLOYEE TABLE
+
+create table employee(
+id int primary key auto_increment,
+name varchar(10),
+superior_id int);
+
+insert into employee (name, superior_id)
+values ('김사장', null),
+('정과장', 1),
+('최대리', 2),
+('이대리', 2),
+('박고문', null);
+
+select em1.id, em1.name as '직원', em2.name as '상사'
+from employee as em1
+inner join employee as em2
+on em1.superior_id = em2.id;
+
+
+
+
+TEST TABLE
+
+create table test (addr varchar(100));
+
+insert into test values ('서울특별시 용산구 서빙고로 136 (용산동6가)');
+
+select * from test;
+
+select substring_index(' test9999@gmail.com', '@', 1);
+
+select substring_index(addr, ' ', 3) from test;
+
+도로명 출력하기
+select substring_index(substring_index(addr, ' ', 3),' ', ' -1') from test;
+
+()안 동 명칭 출력하기
+select substring_index(addr, '(', -1) from  test;
+select substring_index(addr, '(', -1, ')', 1) as 동주소 from test;
+
+create table test (
+addr varchar(100) not null,
+insert_date date default (current_date)
+);
+
+desc test;
+
+insert into test (addr)
+values ('서울');
+
+select * from test;
+
+select YEAR(NOW()), MONTH(NOW()), DAY(NOW()), HOUR(NOW()), MINUTE(NOW()), SECOND(NOW()), MICROSECOND(NOW());
+
+select WEEKDAY(' 2024-12-18 ');
+
+select DATE(NOW()), TIME(NOW());
+
+SELECT DATE_FORMAT(NOW(),'%Y-%m-%d') FROM DUAL;
+
+
+
+
+
+TEST 1,2
+
+
+create table test1(p_id int primary key,
+p_name varchar(10));
+
+create table test2(f_id int primary key,
+f_name  varchar(10),
+p_id int,
+constraint fk_p_id
+foreign key (p_id)
+references test1(p_id)
+);
+
+insert into test1 values (1, '아이브');
+insert into test1 values (2, '뉴진스');
+
+insert into test2 values (1, '장원영', 1);
+insert into test2 values (2, '안유진', 1);
+insert into test2 values (3, '민지', 2);
+insert into test2 values (4, '하니', 2);
+
+delete from test2 where p_id=1;
+
+update test1 set p_id=4 where p_id = 2;
+
+start transaction;
+
+select * from test1;
+
+update test1 set p_name='세븐틴' where p_id=4;
+
+rollback;
+

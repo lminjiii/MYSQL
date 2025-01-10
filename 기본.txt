@@ -1,0 +1,166 @@
+chcp
+chcp 65001
+mysql -u root -p
+show databases;
+use test_db(데이터베이스 이름);
+show tables;
+select * from (테이블명);
+
+create table telbook(
+id int primary key auto_increment,
+name varchar(20) not null,
+address varchar(200),
+phone varchar(20)
+);desc
+
+ insert into telbook (name, address, phone)
+    -> values ('이민지', '서울 강남구', '010-1234-5678');
+
+select * from student
+where belong = 'dance' or belong = 'sports';
+
+select name, belong, phone from student
+where belong in ('dance', 'sports');
+
+wild character : %, _
+where 필드명 like ''
+%가 들어가는 곳은 무엇이 들어가든 상관없음
+
+( = '', in, like) 다 가능
+
+select name from student where name like '_';
+
+select * from student where belong like '%S%' or belong like '%C%';
+
+select *  from student
+
+staus 2 또는 3 인 자료 중에 (in)
+belong에 C를 포함하여 자료들을 (like)
+s_id, name, belong, stauts를 출력
+name에 대해서 내림차순으로 출력
+
+select s-id, name, belong, status from student
+where status in (2, 3) and belong like '%C%'
+order by name desc;
+
+
+select s-id as ID, name as 이름, belong as 소속, status as 상태 from student
+where status in (2, 3) and belong like '%C%'
+order by name desc;
+
+삭제
+drop : 완전히 구조까지 삭제
+delete : 내용만 삭제하는 것
+
+delete from student where phone like '%343%';
+
+drop table 테이블명;
+drop database 
+
+show tables;
+
+select * from student;
+
+조로(s_id : 20100102)의 belong을 DANCE로 변경
+update student set belong = 'DANCE'
+where s_id = '20100102';
+
+name이 오공 친구의
+belong = 'Golf', phone = '119'로 변경
+update student set belong = 'Golf', phone = '119'
+where name = '오공';
+
+CRUD
+C : Create(Insert info명 ... 구문)
+R : Read (Select * from명 ... 구문)
+U : Update (Update table명 ... 구문)
+D : Delete (Delete from table명 ... 구문)
+
+구조변경 구문
+--modify : 필드명을 못바꾸는 것
+alter table 테이블명
+modify column 원래이름 타입...
+
+change : 필드명까지 바꾸는 것
+alter table 테이블명
+change column 원래 이름 타입...
+
+alter table dept(테이블 이름)
+change column dept_name name varchar(50);
+
+기본함수 --- 
+sum 합계계산
+avg 평균값
+count 갯수
+max 
+min
+
+select count(name) from student;
+select count(*) from student;
+select count(*) as TotalRow from student;
+
+select count(*) as count from student where belong = 'computer';
+
+연산조건으로 묶을 그룹 지정 : group by
+묶은 그룹의 결과에 대한 별도의 조건을 지정 : having
+
+Belong        count
+computer      4
+dance           2
+sports           3
+
+select belong as Belong, count(*) as Count from student
+group by belong
+(order by belong asc;)
+(order by count(*) asc)          3개가 없어도 가능 1개만 있어도 가능
+(order by BelongCount asc)
+
+
+select belong as Belong, count(*) as BelongCount from student
+group by belong
+having BelongCount >= 3
+order by BelongCount asc
+
+select belong, count(*) as groupCount from student
+where belong in ('computer', 'dance')
+group by belong
+having groupCount >= 5
+order by groupCount desc;
+
+select belong as 소속, count(*) 인원수, sum(status) as 합
+from student
+group by belong
+order by 합 desc;
+
+select * from student limit 3 (offset 5);
+
+select count(*), max(status), min(status), sum(status), avg(status)
+from student
+group by belong;
+
+select * from student limit 3 offset 0;
+
+함수
+
+select floor( rand()*10 + 1);  --- 랜덤한 수
+
+select floor( rand()*44 + 1) as 1st, --- 로또번호 출력
+floor( rand()*44 + 1) as 2st,
+floor( rand()*44 + 1) as 3st,
+floor( rand()*44 + 1) as 4st,
+floor( rand()*44 + 1) as 5st,
+floor( rand()*44 + 1) as 6st;
+
+날짜 검색 기간을 만들어 주세요
+지난달의 첫 날짜와 마지막 날짜구하기
+select last_day(now() - interval 2 month) + interval 1 day;
+select last_day(now() - interval 1 month);
+
+현재에서 한달 전 구하기
+select now() - interval 1 month;
+
+ 아이돌 장원영(2004-8-31), 안유진(2003-9-1)의 만 나이를 구해 주세요.
+select timestampdiff(year, '2004-8-31', curdate());
+
+아이브 이서가 책을 2024-02-28에 빌려 갔습니다. 오늘까지 며칠째 책을 갖고 있나요.
+select timestampdiff(day, '2024-2-28', curdate());

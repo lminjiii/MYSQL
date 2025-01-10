@@ -1,0 +1,23 @@
+db : phone_book_db
+
+user : teluser
+
+pw : 1111
+
+table : phone_book
+
+id bigint => 자바 long
+
+name
+
+age
+
+address
+
+phone
+
+created_at datetime
+
+updated_at datetime
+
+

@@ -1,0 +1,248 @@
+1번 테이블
+
+create table dept(
+dep_no int primary key,
+dep_name varchar(10),
+loc varchar(10) not null
+);
+
+insert into dept values ('10', '총무부', '서울'); 
+insert into dept values ('20', '영업부', '부산');
+insert into dept values ('30', '전산부', '대전');
+insert into dept values ('40', '자재부', '광주');
+
+2번 테이블
+
+create table employee(
+emp_no int primary key auto_increment,
+emp_name varchar(10) not null,
+dep_no int,
+position varchar(10) not null,
+salary int,
+hire_date date,
+jumin_num char(13) not null,
+phone_num varchar(15) not null,
+mgr_emp_no int,
+constraint fk_dep_no
+foreign key (dep_no)
+references dept (dep_no) on delete cascade
+);
+
+insert into employee (emp_name, dep_no, position, salary, hire_date
+, jumin_num, phone_num, mgr_emp_no)
+values ('홍길동', 10, '사장', 5000, '1980-01-01','7211271109410', '01099699515', NULL),
+('한국남', 20, '부장', 3000, '1988-11-01','6002061841224', '01024948424', 1),
+('이순신', 20, '과장', 3500,'1989-03-01','6209172010520', '01026352672', 2),
+('이미라', 30, '대리', 2503,'1983-04-01','8409282070226', '01094215694', 17),
+('이순라', 20, '사원', 1200,'1990-05-01','8401041483626', '01094215694', 3),
+('공부만', 30, '과장', 4003, '1995-05-01', '8402121563616', '01191338328', 17),
+('놀기만', 20, '과장', 2300,'1996-06-01','8011221713914', '01029463523', 2),
+('채송화', 30, '대리', 1703,'1992-06-01','8105271014112', '01047111052', 17),
+('무궁화', 10, '사원', 1100,'1984-08-01','8303291319116', '01025672300', 12),
+('공부해', 30, '사원', 1303,'1988-11-01','8410031281312', '01027073174', 4),
+('류별나', 20, '과장', 1600,'1989-12-01','8409181463545', '01071628290', 2),
+('류명환', 10, '대리', 1800,'1990-10-01','8207211661117', '01042072622', 20),
+('무궁화', 10, '부장', 3000,'1996-11-01','8603231183011', '01098110955', 1),
+('채시라', 20, '사원', 3400,'1993-10-01','8001172065410', '01044452437', 3),
+('최진실', 10, '사원', 2000,'1991-04-01','8303101932611', '01027491145', 12),
+('김유신', 30, '사원', 4000,'1981-04-01','7912031009014', '01098218448', 4),
+('이성계', 30, '부장', 2803,'1984-05-01', '8102261713921', '0165358075', 1),
+('강감찬', 30, '사원', 1003,'1986-07-01','8203121977315', '01033583130', 4),
+('임꺽정', 20, '사원', 2200,'1988-04-01','8701301040111', '01086253078', 7),
+('깨똥이', 10, '과장', 4500,'1990-05-01','8811232452719', '01090084876', 13);
+
+3번 테이블
+
+create table customer(
+cus_no int primary key auto_increment,
+cus_name varchar(10) not null,
+tel_num varchar(15),
+jumin_num char(13) not null,
+emp_no int,
+constraint fk_emp_no
+foreign key (emp_no)
+references employee (emp_no)  on delete cascade
+);
+
+insert into customer(cus_name, tel_num, jumin_num, emp_no)
+values ('류민이', '123-1234', '7001131537915', 3),
+('이강민', '343-1454', '6902161627914', 2),
+('이영희', '144-1655', '7503202636215', NULL),
+('김철이', '673-1674', '7704301234567', 4),
+('박류완', '123-1674', '7205211123675', 3),
+('서캔디', '673-1764', '6507252534566', NULL),
+('신똘이', '176-7677', '0006083648614', 7),
+('도쇠돌', '123-6774', '0008041346574', 9),
+('권홍이', '767-1234', '7312251234689', 13), 
+('김안나', '767-1677', '7510152432168', 4);
+
+4번 테이블
+
+create table salary_grade (
+sal_grade_no int primary key,
+min_sal int not null,
+max_sal int not null
+);
+
+insert into salary_grade(sal_grade_no, min_sal, max_sal)
+values (1, 8001, 10000),
+(2, 6001, 8000),
+(3, 4001, 6000),
+(4, 2001, 4000),
+(5, 1000, 2000);
+
+1. select * from dept;
+
+2. select  dep_no, loc from dept;
+
+3. select emp_name, salary,  salary + 300 as 인센티브
+from employee
+
+4. select emp_name, ifnull( mgr_emp_no, '없음') from employee;
+
+5. select concat(dep_name, ' ', loc) as 정보 from dept;
+
+6. select * from employee
+where dep_no = '30';
+
+7. select * from employee
+order by dep_no,
+hire_date desc;
+
+8. select * from employee
+where emp_name like '김%';
+
+9. select * from employee
+where hire_date like '%1990%';
+
+10. select * from employee
+where phone_num like '%8075';
+
+11.select * from employee
+where salary <= 1200;
+
+12. select * from employee
+where position in ('대리', '과장');
+
+13. select * from employee
+where mgr_emp_no is null; 
+
+14. select emp_no, emp_name, position, salary from employee
+where salary >= 2000 and dep_no = '20';
+
+15. select * from employee
+where dep_no not in ('10', '20');
+
+16. select concat(emp_name, ' ', position) as name, length(emp_name) as '이름길이',
+instr(jumin_num, '9') as 'contains 9?' from employee;
+
+17. select mod(salary, 1000) from employee;
+
+18. select emp_name as '30년 이상 근속자' from employee
+where timestampdiff(year, hire_date, now()) >= 30;
+
+19. select avg(salary), sum(salary), count(emp_name) from employee;
+
+20. select dep_no, avg(salary), sum(salary), count(emp_name) from employee group by dep_no;
+
+21. select min(hire_date), max(hire_date) from employee;
+
+22. select dep_no, avg(salary) from employee group by dep_no;
+
+23. select d.dep_no,  e.position, sum(salary)
+from employee e 
+inner join dept d
+on e.dep_no = d.dep_no
+group by dep_no, position;
+
+24. select dep_no, sum(salary) from employee
+group by dep_no
+having sum(salary) >= 17300
+
+25. select dep_no, sum(salary) from employee
+group by dep_no
+having sum(salary) >= 17300
+order by sum(salary) desc;
+
+26. select max(평균급여) from
+(select avg(salary) as 평균급여 from employee group by dep_no) t;
+
+27. select emp_name, salary from employee
+where salary>(select  salary from employee where emp_name = '공부만');
+
+28. select emp_name, position, salary from employee
+where position = (select position from employee where emp_no = 13) and
+salary > ( select position from employee where emp_no = 17);
+
+29. select emp_name, position, salary from employee
+where salary = (select min(salary) from employee);
+
+30. select dep_no, min(salary) from employee group by dep_no
+having min(salary)  > (select min(salary) from employee group by dep_no having dep_no = 30);
+
+31. select emp_name, salary from employee
+where salary between
+(select avg(salary) from employee group by position having position = '사원') and
+(select avg(salary) from employee group by position having position = '과장');
+
+32. update employee set dep_no = '40'
+where emp_name in  ('놀기만', '류별나');
+
+33. update employee
+set salary = (select * from (select salary from employee where emp_name = '공부해') as a),
+position = (select * from (select position from employee where emp_name = '공부해') as b)
+where emp_name = '놀기만';
+
+34.  insert into dept (dep_no, dep_name, loc)
+values ('50', '기획부', '제주');
+
+insert into employee (emp_name, dep_no, position, salary, hire_date
+, jumin_num, phone_num, mgr_emp_no)
+values ('말똥이', 50, '과장', 4200,'1993-01-03','8911232452719', '01990084876', 13);
+
+35. delete from employee
+where dep_no = ( select dep_no from dept where loc = '제주');
+
+36. select emp_name, dep_name, loc from employee as e
+join dept as d
+on e.dep_no = d.dep_no;
+
+37. select cus_name, emp_name, position, dep_name
+from dept as d join employee as e on d.dep_no = e.dep_no
+join customer as c on c.emp_no = e.emp_no;
+
+38. select distinct emp_name from customer as c join employee as e
+on c.emp_no = e.emp_no where c.emp_no is not null
+order by emp_name desc;
+
+39. select loc, count(emp_no) as '직원 수' 
+from dept as d join employee as e
+on d.dep_no = e.dep_no 
+group by e.dep_no;
+
+40. select position, loc, count(emp_no) as '직원 수' 
+from dept as d join employee as e
+on d.dep_no = e.dep_no 
+group by position, loc;
+
+41. select year(hire_date) as '입사년도', count(emp_no) as '입사자 수' 
+from employee
+group by year(hire_date) order by year(hire_date) desc;
+
+42. select cus_name as '고객명', loc as '방문지역' from dept as d 
+join employee as e on d.dep_no = e.dep_no
+join customer as c on c.emp_no = e.emp_no;
+
+43. select a.emp_name, b.emp_name, b.position
+from employee a join
+employee b on a.mgr_emp_no = b.emp_no;
+
+44. start transaction;
+
+insert into dept values (1000, '인사부', '서울');
+
+select * from dept;
+
+rollback;
+
+45. alter table salary_grade add column bigo varchar(255) after max_sal;
